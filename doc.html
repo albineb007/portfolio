@@ -22,18 +22,123 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--black);
+      background-color: var(--white);
       color: var(--black);
       line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      scroll-behavior: smooth;
     }
 
-    .container {
-      max-width: 1000px;
-      margin: 40px auto;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 6s infinite ease-in-out;
     }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+      50% { transform: translateY(-20px) rotate(180deg); opacity: 0.3; }
+    }
+.container {
+  background: var(--white);
+  max-width: 98%;
+  margin: 80px auto 20px auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--black);
+  position: relative;
+}
+
+/* Scroll triggered animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-in-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: all 0.8s ease-out;
+}
+
+.slide-in-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-in-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 0.8s ease-out;
+}
+
+.slide-in-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scale-in {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.8s ease-out;
+}
+
+.scale-in.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Parallax background layers */
+.parallax-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(0,0,0,0.02) 25%, transparent 25%), 
+              linear-gradient(-45deg, rgba(0,0,0,0.02) 25%, transparent 25%), 
+              linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.02) 75%), 
+              linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.02) 75%);
+  background-size: 30px 30px;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    max-width: 95%;
+    margin: 80px auto 20px auto;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+  }
+
+  .section {
+    padding: 2.5rem 1.5rem;
+  }
+}
 
     header {
       position: fixed;
@@ -41,13 +146,14 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 999;
+      transition: all 0.3s ease;
     }
 
     nav {
       background: var(--white);
       padding: 0.5rem 2rem;
       border-radius: 50px;
-      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       gap: 1.5rem;
       align-items: center;
@@ -64,28 +170,97 @@
     nav a:hover {
       color: gray;
     }
+  nav .btn {
+  padding: 0.4rem 1.2rem;
+  margin-left: 1rem;
+  background: var(--black);
+  color: var(--white);
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+nav .btn:hover {
+  background: var(--white);
+  color: var(--black);
+  transform: translateY(-2px);
+  border: 1px solid var(--black);
+}
+
 
     .hamburger {
       display: none;
       font-size: 1.5rem;
       cursor: pointer;
       color: var(--white);
+      background-color: var(--black);
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      align-items: center;
+      justify-content: center;
       position: fixed;
       top: 20px;
       right: 20px;
-      z-index: 1000;
+      z-index: 1001;
+      user-select: none;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger:hover {
+      background-color: var(--gray);
+      transform: scale(1.1);
     }
 
     .mobile-nav {
       display: none;
-      position: absolute;
-      top: 70px;
-      right: 20px;
-      background: var(--white);
-      padding: 1rem;
-      border-radius: 10px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--black);
       flex-direction: column;
-      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      z-index: 1000;
+      transition: transform 0.3s ease-in-out;
+      transform: translateY(-100%);
+    }
+    
+    .mobile-nav.open {
+      display: flex;
+      transform: translateY(0);
+    }
+    
+    .mobile-nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 2rem;
+      transition: color 0.3s ease;
+    }
+    
+    .mobile-nav a:hover {
+      color: var(--gray);
+    }
+    
+    .mobile-nav a.btn {
+      background: var(--white);
+      color: var(--black);
+      border-radius: 30px;
+      padding: 0.8rem 2rem;
+      margin-top: 1rem;
+      display: inline-block;
+      text-align: center;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-nav a.btn:hover {
+      background: var(--gray);
+      color: var(--black);
+      transform: translateY(-2px);
     }
 
     .section {
@@ -104,16 +279,54 @@
 
     .hero {
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
     }
 
     .hero h1 {
       font-size: 2.5rem;
       font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, var(--black), #666, var(--black));
+      background-size: 200% 200%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient-shift 3s ease-in-out infinite;
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
     .hero p {
       font-size: 1.2rem;
       margin-top: 1rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeInUp 1s ease-out 0.5s forwards;
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     .btn {
@@ -124,88 +337,575 @@
       padding: 0.7rem 1.5rem;
       border-radius: 30px;
       text-decoration: none;
-      transition: background 0.3s, color 0.3s;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--black);
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: var(--white);
+      border-radius: 50%;
+      transition: all 0.4s ease;
+      transform: translate(-50%, -50%);
+    }
+
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
     }
 
     .btn:hover {
-      background: var(--white);
       color: var(--black);
-      border: 1px solid var(--black);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn span {
+      position: relative;
+      z-index: 1;
     }
 
     h2 {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      font-weight: 700;
     }
 
     .projects .search-bar input {
       width: 100%;
-      padding: 0.5rem;
+      padding: 0.8rem;
       margin-bottom: 1.5rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .projects .search-bar input:focus {
+      outline: none;
+      border-color: var(--black);
+    }
+
+    .project-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+
+    .keyword {
+      background: var(--black);
+      color: var(--white);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .keyword:hover {
+      background: var(--gray);
+      color: var(--black);
+      transform: translateY(-2px);
+    }
+
+    .keyword.active {
+      background: var(--gray);
+      color: var(--black);
     }
 
     .project-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
     }
 
     .project-card {
-      border: 1px solid #eee;
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+      border: 2px solid #eee;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
       background-color: var(--white);
       color: var(--black);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .project-card:hover::before {
+      left: 100%;
+    }
+
+    .project-card:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      border-color: var(--black);
+    }
+
+    .project-card:hover .project-card h3 {
+      transform: translateX(10px);
     }
 
     .project-card h3 {
       margin-bottom: 0.5rem;
+      color: var(--black);
+      font-size: 1.4rem;
+      transition: transform 0.3s ease;
+    }
+
+    .project-description {
+      flex-grow: 1;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .project-details {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--black);
+    }
+
+    .project-details p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .project-buttons {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1rem;
     }
 
     .project-card button {
-      margin-top: 0.5rem;
-      padding: 0.4rem 1rem;
-      border: none;
+      flex: 1;
+      padding: 0.6rem 1.2rem;
+      border: 2px solid var(--black);
       border-radius: 8px;
+      background: var(--white);
+      color: var(--black);
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .project-card button:first-child {
       background: var(--black);
       color: var(--white);
-      cursor: pointer;
-      transition: 0.3s;
     }
 
     .project-card button:hover {
-      background: var(--white);
+      background: var(--black);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .project-card button:first-child:hover {
+      background: var(--gray);
       color: var(--black);
-      border: 1px solid var(--black);
+      border-color: var(--gray);
     }
 
     footer {
       text-align: center;
       padding: 2rem;
       background-color: var(--white);
-      color: #aaa;
+      color: #666;
       font-size: 0.9rem;
+      border-top: 1px solid #eee;
+    }
+
+    .contact-info {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-info p {
+      margin: 1rem 0;
+      font-size: 1.1rem;
+    }
+
+    .contact-info a:hover {
+      color: var(--gray) !important;
+      text-decoration: none !important;
+    }
+
+    /* New Impressive Contact Section Styles */
+    .contact-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .contact-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .contact-header h2 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--white), #ccc);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .contact-subtitle {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-info-section h3,
+    .contact-form-section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      color: var(--white);
+    }
+
+    .contact-methods {
+      margin-bottom: 3rem;
+    }
+
+    .contact-method {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .contact-method:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(10px);
+    }
+
+    .contact-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--white), #ccc);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--black);
+      flex-shrink: 0;
+    }
+
+    .contact-details h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--white);
+    }
+
+    .contact-details p,
+    .contact-details a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .contact-details a:hover {
+      color: var(--white);
+    }
+
+    .social-links h4 {
+      color: var(--white);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+      background: var(--white);
+      color: var(--black);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+    }
+
+    .contact-form-wrapper {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2.5rem;
+    }
+
+    .modern-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 1.2rem 1rem 0.8rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--white);
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .form-group label {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .form-group input:focus + label,
+    .form-group textarea:focus + label,
+    .form-group input:valid + label,
+    .form-group textarea:valid + label {
+      top: 0.3rem;
+      font-size: 0.75rem;
+      color: var(--white);
+    }
+
+    .send-btn {
+      background: linear-gradient(135deg, var(--white), #ccc);
+      color: var(--black);
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .send-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(255, 255, 255, 0.3);
+    }
+
+    .send-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .send-btn:hover .btn-icon {
+      transform: translateX(5px);
     }
 
     footer a {
-      color: #aaa;
+      color: #666;
       margin: 0 0.5rem;
       text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--black);
+    }
+
+    /* Additional responsive breakpoints */
+    @media (max-width: 480px) {
+      .container {
+        max-width: 98%;
+        margin: 70px auto 10px auto;
+        border-radius: 10px;
+      }
+
+      .section {
+        padding: 2rem 1rem;
+      }
+
+      .hero h1 {
+        font-size: 1.8rem;
+        line-height: 1.2;
+      }
+
+      .hero p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+      }
+
+      .project-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .project-card {
+        padding: 1.2rem;
+      }
+
+      .mobile-nav a {
+        font-size: 1.5rem;
+      }
+
+      .mobile-nav a.btn {
+        font-size: 1rem;
+        padding: 0.6rem 1.5rem;
+      }
+
+      nav {
+        padding: 0.6rem 1.8rem;
+        gap: 1rem;
+      }
+
+      nav a {
+        font-size: 0.9rem;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .contact-header h2 {
+        font-size: 2rem;
+      }
+
+      .contact-form-wrapper {
+        padding: 1.5rem;
+      }
+
+      .contact-method {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+
+      .social-icons {
+        justify-content: center;
+      }
+
+      .project-keywords {
+        gap: 0.5rem;
+      }
+
+      .keyword {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+
+      .project-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
     }
 
     @media (max-width: 768px) {
-      nav {
-        display: none;
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
       }
 
+      .contact-header h2 {
+        font-size: 2.5rem;
+      }
+
+      .contact-header {
+        margin-bottom: 3rem;
+      }
+
+      .project-keywords {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (min-width: 769px) {
       .hamburger {
-        display: block;
+        display: none !important;
       }
-
+      
       .mobile-nav {
-        display: flex;
+        display: none !important;
+      }
+      
+      nav {
+        padding: 0.8rem 2.5rem;
+        gap: 1rem;
       }
     }
   </style>
@@ -213,7 +913,7 @@
 
 <body>
   <header>
-    <nav>
+    <nav class="fade-in">
       <a href="#home">Home</a>
       <a href="#about">About</a>
       <a href="#projects">Projects</a>
@@ -225,48 +925,199 @@
       <a href="#about">About</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
+      <a href="resume.pdf" class="btn" download>Resume</a>
+
     </div>
   </header>
 
   <main class="container">
     <section id="home" class="section white-section hero">
-      <h1>Hi, I’m Albin EB</h1>
-      <p>Full Stack Developer | UI/UX Designer | SEO Enthusiast</p>
-      <a href="#projects" class="btn">View Projects</a>
+            <h1 class="scale-in">Hi, I'm Albin EB</h1>
+      <p class="fade-in">Full Stack Developer | UI/UX Designer | SEO Enthusiast</p>
+      <a href="#projects" class="btn slide-in-left"><span>View Projects</span></a>
     </section>
 
-    <section id="about" class="section black-section">
-      <a href="resume.pdf" class="btn" download style="margin-top: 1.5rem; display: inline-block;">Download Resume</a>
+    <section id="about" class="section black-section slide-in-right">
+      
       <h2>About Me</h2>
       <p>I am a passionate full stack developer with experience in internships, problem-solving, and building dynamic web applications. I work with HTML, CSS, JavaScript, React, Django, WordPress, MySQL, and SEO optimization to deliver high-quality digital experiences.</p>
     </section>
 
-    <section id="projects" class="section white-section projects">
+    <section id="projects" class="section white-section projects fade-in">
       <h2>Projects</h2>
       <div class="search-bar">
         <input type="text" id="projectSearch" placeholder="Search projects by name or tech...">
       </div>
+      <div class="project-keywords">
+        <span class="keyword" onclick="filterProjects('data science')">Data Science</span>
+        <span class="keyword" onclick="filterProjects('python')">Python</span>
+        <span class="keyword" onclick="filterProjects('django')">Django</span>
+        <span class="keyword" onclick="filterProjects('web')">Web Projects</span>
+        <span class="keyword" onclick="filterProjects('excel')">Excel Projects</span>
+        <span class="keyword" onclick="filterProjects('full stack')">Full Stack Projects</span>
+        <span class="keyword" onclick="filterProjects('')">All Projects</span>
+      </div>
       <div class="project-grid" id="projectGrid">
-        <div class="project-card" data-tech="react javascript">
+        <div class="project-card" data-tech="html css javascript web frontend">
           <h3>Portfolio Website</h3>
-          <p>A sleek portfolio showcasing my development and design skills.</p>
-          <p><strong>Tech Stack:</strong> HTML, CSS, JavaScript</p>
-          <button>View Code</button>
+          <p class="project-description">A sleek, responsive portfolio website showcasing my development and design skills with modern UI/UX principles.</p>
+          <div class="project-details">
+            <p><strong>Tools:</strong> VS Code, Git, Figma</p>
+            <p><strong>Technologies:</strong> HTML5, CSS3, JavaScript ES6, Responsive Design</p>
+          </div>
+          <div class="project-buttons">
+            <button onclick="openProject('https://github.com/albineb/portfolio')">View Code</button>
+            <button onclick="openProject('https://albineb.github.io/portfolio')">Live Demo</button>
+          </div>
         </div>
-        <div class="project-card" data-tech="django mysql">
-          <h3>Blog App</h3>
-          <p>A dynamic blog platform with user authentication and post management.</p>
-          <p><strong>Tech Stack:</strong> Django, MySQL</p>
-          <button>Live Demo</button>
+        <div class="project-card" data-tech="django python mysql web full stack">
+          <h3>Blog Platform</h3>
+          <p class="project-description">A dynamic full-stack blog platform with user authentication, post management, and real-time commenting system.</p>
+          <div class="project-details">
+            <p><strong>Tools:</strong> PyCharm, MySQL Workbench, Postman</p>
+            <p><strong>Technologies:</strong> Django, Python, MySQL, Bootstrap, jQuery</p>
+          </div>
+          <div class="project-buttons">
+            <button onclick="openProject('https://github.com/albineb/blog-platform')">View Code</button>
+            <button onclick="openProject('https://blog-demo.herokuapp.com')">Live Demo</button>
+          </div>
+        </div>
+        <div class="project-card" data-tech="python data science pandas excel analytics">
+          <h3>Sales Data Analyzer</h3>
+          <p class="project-description">A comprehensive data analysis tool that processes Excel files and generates interactive dashboards for sales insights.</p>
+          <div class="project-details">
+            <p><strong>Tools:</strong> Jupyter Notebook, Excel, Power BI</p>
+            <p><strong>Technologies:</strong> Python, Pandas, Matplotlib, Plotly, NumPy</p>
+          </div>
+          <div class="project-buttons">
+            <button onclick="openProject('https://github.com/albineb/sales-analyzer')">View Code</button>
+            <button onclick="openProject('https://sales-dashboard.streamlit.app')">Live Demo</button>
+          </div>
+        </div>
+        <div class="project-card" data-tech="react nodejs mongodb full stack web">
+          <h3>Task Management App</h3>
+          <p class="project-description">A modern full-stack task management application with real-time updates, team collaboration, and project tracking.</p>
+          <div class="project-details">
+            <p><strong>Tools:</strong> VS Code, MongoDB Atlas, Docker</p>
+            <p><strong>Technologies:</strong> React, Node.js, Express, MongoDB, Socket.io</p>
+          </div>
+          <div class="project-buttons">
+            <button onclick="openProject('https://github.com/albineb/task-manager')">View Code</button>
+            <button onclick="openProject('https://task-app-demo.vercel.app')">Live Demo</button>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="contact" class="section black-section">
-      <h2>Contact</h2>
-      <p>Email: <a href="mailto:albineb@example.com">albineb@example.com</a></p>
-      <p>LinkedIn: <a href="https://linkedin.com/in/albineb">albineb</a></p>
-      <p>GitHub: <a href="https://github.com/albineb">albineb</a></p>
+    <section id="contact" class="section black-section slide-in-left">
+      <div class="contact-wrapper">
+        <div class="contact-header">
+          <h2>Let's Work Together</h2>
+          <p class="contact-subtitle">Ready to bring your ideas to life? Get in touch and let's create something amazing!</p>
+        </div>
+        
+        <div class="contact-grid">
+          <!-- Contact Information -->
+          <div class="contact-info-section">
+            <h3>Get In Touch</h3>
+            <div class="contact-methods">
+              <div class="contact-method">
+                <div class="contact-icon">
+                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                  </svg>
+                </div>
+                <div class="contact-details">
+                  <h4>Email</h4>
+                  <p><a href="mailto:albineb@example.com">albineb@example.com</a></p>
+                </div>
+              </div>
+              
+              <div class="contact-method">
+                <div class="contact-icon">
+                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                  </svg>
+                </div>
+                <div class="contact-details">
+                  <h4>Phone</h4>
+                  <p><a href="tel:+1234567890">+1 (234) 567-8900</a></p>
+                </div>
+              </div>
+              
+              <div class="contact-method">
+                <div class="contact-icon">
+                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                  </svg>
+                </div>
+                <div class="contact-details">
+                  <h4>Location</h4>
+                  <p>Available for Remote Work</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="social-links">
+              <h4>Follow Me</h4>
+              <div class="social-icons">
+                <a href="https://github.com/albineb" target="_blank" class="social-icon">
+                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                </a>
+                <a href="https://linkedin.com/in/albineb" target="_blank" class="social-icon">
+                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </a>
+                <a href="https://twitter.com/albineb" target="_blank" class="social-icon">
+                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Contact Form -->
+          <div class="contact-form-section">
+            <div class="contact-form-wrapper">
+              <h3>Send Message</h3>
+              <form class="modern-form">
+                <div class="form-group">
+                  <input type="text" id="name" required>
+                  <label for="name">Your Name</label>
+                </div>
+                
+                <div class="form-group">
+                  <input type="email" id="email" required>
+                  <label for="email">Email Address</label>
+                </div>
+                
+                <div class="form-group">
+                  <input type="text" id="subject" required>
+                  <label for="subject">Subject</label>
+                </div>
+                
+                <div class="form-group">
+                  <textarea id="message" rows="6" required></textarea>
+                  <label for="message">Your Message</label>
+                </div>
+                
+                <button type="submit" class="send-btn">
+                  <span>Send Message</span>
+                  <div class="btn-icon">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                  </div>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <footer>
@@ -278,19 +1129,261 @@
   </main>
 
   <script>
-    function toggleMenu() {
-      const mobileNav = document.getElementById('mobileNav');
-      mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+    // Scroll-triggered animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all animation elements
+    document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Create floating particles
+    function createParticles() {
+      const container = document.querySelector('.container');
+      const particleCount = 15;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        container.appendChild(particle);
+      }
     }
 
+    // Parallax scrolling effect
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const parallaxBg = document.querySelector('.parallax-bg');
+      
+      if (parallaxBg) {
+        parallaxBg.style.transform = `translateY(${scrolled * 0.2}px)`;
+      }
+      
+      // Header scroll effect
+      const header = document.querySelector('header');
+      if (scrolled > 100) {
+        header.style.transform = 'translateX(-50%) translateY(-10px)';
+        header.style.opacity = '0.9';
+      } else {
+        header.style.transform = 'translateX(-50%) translateY(0)';
+        header.style.opacity = '1';
+      }
+      
+      // Parallax effect on project cards
+      document.querySelectorAll('.project-card').forEach((card, index) => {
+        const cardTop = card.offsetTop;
+        const cardHeight = card.offsetHeight;
+        const windowHeight = window.innerHeight;
+        
+        if (scrolled + windowHeight > cardTop && scrolled < cardTop + cardHeight) {
+          const speed = (index % 2 === 0) ? 0.05 : -0.05;
+          card.style.transform = `translateY(${(scrolled - cardTop) * speed}px)`;
+        }
+      });
+    });
+
+    // Enhanced menu toggle with animation
+    function toggleMenu() {
+      const mobileNav = document.getElementById('mobileNav');
+      const hamburger = document.querySelector('.hamburger');
+      
+      mobileNav.classList.toggle('open');
+      
+      if (mobileNav.classList.contains('open')) {
+        hamburger.innerHTML = '✕';
+        hamburger.style.transform = 'rotate(90deg)';
+        document.body.style.overflow = 'hidden';
+      } else {
+        hamburger.innerHTML = '&#9776;';
+        hamburger.style.transform = 'rotate(0deg)';
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    // Filter projects with animation
+    function filterProjects(keyword) {
+      const searchInput = document.getElementById('projectSearch');
+      const keywords = document.querySelectorAll('.keyword');
+      const projectCards = document.querySelectorAll('.project-card');
+      
+      // Update active keyword with animation
+      keywords.forEach(k => {
+        k.classList.remove('active');
+        k.style.transform = 'scale(1)';
+      });
+      event.target.classList.add('active');
+      event.target.style.transform = 'scale(1.1)';
+      
+      // Set search input and trigger search
+      searchInput.value = keyword;
+      searchInput.dispatchEvent(new Event('input'));
+      
+      // Animate filtered cards
+      setTimeout(() => {
+        projectCards.forEach((card, index) => {
+          if (card.style.display !== 'none') {
+            card.style.animationDelay = (index * 0.1) + 's';
+            card.classList.add('scale-in');
+          }
+        });
+      }, 100);
+    }
+
+    // Open project with animation
+    function openProject(url) {
+      // Add click animation
+      event.target.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        event.target.style.transform = 'scale(1)';
+        window.open(url, '_blank');
+      }, 150);
+    }
+
+    // Enhanced search functionality
     const searchInput = document.getElementById('projectSearch');
     const projectCards = document.querySelectorAll('.project-card');
+    const projectGrid = document.getElementById('projectGrid');
 
     searchInput.addEventListener('input', function () {
       const query = this.value.toLowerCase();
-      projectCards.forEach(card => {
+      let visibleCards = 0;
+      
+      projectCards.forEach((card, index) => {
         const text = card.innerText.toLowerCase();
-        card.style.display = text.includes(query) ? 'block' : 'none';
+        const techStack = card.getAttribute('data-tech') || '';
+        
+        if (text.includes(query) || techStack.includes(query)) {
+          card.style.display = 'block';
+          card.style.animationDelay = (index * 0.1) + 's';
+          visibleCards++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Show "No results" message with animation
+      let noResultsMsg = document.getElementById('noResults');
+      if (visibleCards === 0 && query.length > 0) {
+        if (!noResultsMsg) {
+          noResultsMsg = document.createElement('div');
+          noResultsMsg.id = 'noResults';
+          noResultsMsg.className = 'fade-in';
+          noResultsMsg.innerHTML = '<p style="text-align: center; color: #666; font-style: italic; margin: 2rem 0;">No projects found matching your search.</p>';
+          projectGrid.appendChild(noResultsMsg);
+        }
+      } else if (noResultsMsg) {
+        noResultsMsg.style.opacity = '0';
+        setTimeout(() => noResultsMsg.remove(), 300);
+      }
+    });
+
+    // Close mobile menu when clicking on links
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        const mobileNav = document.getElementById('mobileNav');
+        const hamburger = document.querySelector('.hamburger');
+        
+        mobileNav.classList.remove('open');
+        hamburger.innerHTML = '&#9776;';
+        hamburger.style.transform = 'rotate(0deg)';
+        document.body.style.overflow = 'auto';
+      });
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Enhanced contact form with better animation
+    document.querySelector('.modern-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const submitBtn = this.querySelector('.send-btn');
+      const btnText = submitBtn.querySelector('span');
+      const btnIcon = submitBtn.querySelector('.btn-icon');
+      const originalText = btnText.textContent;
+      
+      // Animation on submit
+      btnText.textContent = 'Sending...';
+      btnIcon.style.transform = 'rotate(45deg)';
+      submitBtn.style.transform = 'scale(0.95)';
+      submitBtn.style.opacity = '0.7';
+      
+      setTimeout(() => {
+        btnText.textContent = 'Sent Successfully! ✓';
+        btnIcon.style.transform = 'rotate(0deg)';
+        submitBtn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+        submitBtn.style.transform = 'scale(1)';
+        submitBtn.style.opacity = '1';
+        
+        setTimeout(() => {
+          btnText.textContent = originalText;
+          btnIcon.style.transform = 'rotate(0deg)';
+          submitBtn.style.background = '';
+          this.reset();
+          
+          // Reset labels
+          this.querySelectorAll('label').forEach(label => {
+            label.style.top = '1rem';
+            label.style.fontSize = '0.9rem';
+            label.style.color = 'rgba(255, 255, 255, 0.6)';
+          });
+        }, 3000);
+      }, 1500);
+    });
+
+    // Initialize animations on load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add particles
+      createParticles();
+      
+      // Set active keyword
+      const firstKeyword = document.querySelector('.keyword:last-child');
+      if (firstKeyword) {
+        firstKeyword.classList.add('active');
+      }
+      
+      // Initial animation trigger
+      setTimeout(() => {
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
+          if (el.getBoundingClientRect().top < window.innerHeight) {
+            el.classList.add('visible');
+          }
+        });
+      }, 300);
+    });
+
+    // Add some interactive hover effects to sections
+    document.querySelectorAll('.section').forEach(section => {
+      section.addEventListener('mouseenter', () => {
+        section.style.transform = 'scale(1.001)';
+      });
+      
+      section.addEventListener('mouseleave', () => {
+        section.style.transform = 'scale(1)';
       });
     });
   </script>
