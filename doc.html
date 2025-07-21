@@ -7,6 +7,7 @@
   <meta name="description" content="Albin EB's personal portfolio website - Full Stack Developer, UI/UX Designer, SEO Enthusiast" />
   <title>Albin EB Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://s.pageclip.co/v1/pageclip.css" media="screen">
   <style>
     :root {
       --black: #000;
@@ -324,6 +325,23 @@ nav .btn:hover {
       animation: fadeInUp 1s ease-out 0.5s forwards;
     }
 
+    .profile-image {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 1.5rem auto;
+      display: block;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 3px solid var(--black);
+      transition: all 0.3s ease;
+    }
+
+    .profile-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
     @keyframes fadeInUp {
       0% { opacity: 0; transform: translateY(30px); }
       100% { opacity: 1; transform: translateY(0); }
@@ -427,6 +445,99 @@ nav .btn:hover {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 2rem;
+      position: relative;
+      max-height: 1200px;
+      overflow: hidden;
+      transition: max-height 0.8s ease-out;
+    }
+
+    .project-grid.expanded {
+      max-height: 10000px;
+      overflow: visible;
+    }
+
+    .project-grid-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 150px;
+      background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 1));
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.5s ease-out;
+      z-index: 10;
+    }
+
+    .project-grid-overlay.hidden {
+      opacity: 0;
+    }
+
+    .show-more-container {
+      text-align: center;
+      margin-top: 2rem;
+      position: relative;
+      z-index: 15;
+    }
+
+    .show-more-btn {
+      background: linear-gradient(135deg, var(--black), #333);
+      color: var(--white);
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .show-more-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: var(--white);
+      border-radius: 50%;
+      transition: all 0.4s ease;
+      transform: translate(-50%, -50%);
+    }
+
+    .show-more-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .show-more-btn:hover {
+      color: var(--black);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    .show-more-btn span {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .show-more-btn .btn-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .show-more-btn:hover .btn-icon {
+      transform: translateY(2px);
+    }
+
+    .show-more-btn.expanded .btn-icon {
+      transform: rotate(180deg);
     }
 
     .project-card {
@@ -935,6 +1046,7 @@ nav .btn:hover {
   <main class="container">
     <section id="home" class="section white-section hero">
             <h1 class="scale-in">Hi, I'm Albin EB</h1>
+      <img src="Profile.webp" alt="Albin EB Profile Picture" class="profile-image fade-in" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; margin: 1rem auto; display: block; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 3px solid var(--black);">
       <p class="fade-in">Full Stack Developer Python & Data Science Enthusiast</p>
       <a href="#projects" class="btn slide-in-left"><span>View Projects</span></a>
     </section>
@@ -960,7 +1072,8 @@ nav .btn:hover {
         <span class="keyword" onclick="filterProjects('full stack')">Full Stack Projects</span>
         
       </div>
-      <div class="project-card" data-tech="wordpress css cpanel domain seo">
+      <div class="project-grid" id="projectGrid">
+        <div class="project-card" data-tech="wordpress css cpanel domain seo">
   <h3>TEDxCCB Official Website</h3>
   <p class="project-description">A WordPress website built for TEDx St. Claret College with custom CSS, domain configuration, and sponsor poster integration. Ranked on Google through SEO.</p>
   <div class="project-details">
@@ -988,6 +1101,9 @@ nav .btn:hover {
     <p><strong>Tools:</strong> Jupyter, Python Imaging Library</p>
     <p><strong>Technologies:</strong> Python, OpenCV, Tesseract, Pillow</p>
   </div>
+   <div class="project-buttons">
+    <button onclick="openProject('https://github.com/albineb007/OCR')">Live Page</button>
+  </div>
 </div>
 
 <div class="project-card" data-tech="python machinelearning powerbi">
@@ -1006,6 +1122,9 @@ nav .btn:hover {
     <p><strong>Tools:</strong> VS Code, Hosting Panel</p>
     <p><strong>Technologies:</strong> HTML, CSS, JavaScript</p>
   </div>
+   <div class="project-buttons">
+    <button onclick="openProject('https://prosperoautomationsystems.com/')">Live Page</button>
+  </div>
 </div>
 
 <div class="project-card" data-tech="wordpress seo branding fashion">
@@ -1014,6 +1133,9 @@ nav .btn:hover {
   <div class="project-details">
     <p><strong>Tools:</strong> WordPress, Elementor, Canva</p>
     <p><strong>Technologies:</strong> WordPress, HTML, CSS</p>
+  </div>
+     <div class="project-buttons">
+    <button onclick="openProject('https://dajolifestyle.com/')">Live Page</button>
   </div>
 </div>
 
@@ -1080,6 +1202,20 @@ nav .btn:hover {
   </div>
 </div>
 
+        <div class="project-grid-overlay" id="projectOverlay"></div>
+      </div>
+      <div class="show-more-container">
+        <button class="show-more-btn" id="showMoreBtn" onclick="toggleShowMore()">
+          <span>
+            Show More Projects
+            <div class="btn-icon">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7 10l5 5 5-5z"/>
+              </svg>
+            </div>
+          </span>
+        </button>
+      </div>
     </section>
 
     <section id="contact" class="section black-section slide-in-left">
@@ -1090,6 +1226,7 @@ nav .btn:hover {
         </div>
         
         <div class="contact-grid">
+          <script src="https://s.pageclip.co/v1/pageclip.js" charset="utf-8"></script>
           <!-- Contact Information -->
           <div class="contact-info-section">
             <h3>Get In Touch</h3>
@@ -1157,28 +1294,28 @@ nav .btn:hover {
           <div class="contact-form-section">
             <div class="contact-form-wrapper">
               <h3>Send Message</h3>
-              <form class="modern-form">
+              <form action="https://send.pageclip.co/Ad7UuKRuuaCofbdiZ4YvKDV4I00YRwmP" class="pageclip-form modern-form" method="post">
                 <div class="form-group">
-                  <input type="text" id="name" required>
+                  <input type="text" name="name" id="name" required>
                   <label for="name">Your Name</label>
                 </div>
                 
                 <div class="form-group">
-                  <input type="email" id="email" required>
+                  <input type="email" name="email" id="email" required>
                   <label for="email">Email Address</label>
                 </div>
                 
                 <div class="form-group">
-                  <input type="text" id="subject" required>
+                  <input type="text" name="subject" id="subject" required>
                   <label for="subject">Subject</label>
                 </div>
                 
                 <div class="form-group">
-                  <textarea id="message" rows="6" required></textarea>
+                  <textarea name="message" id="message" rows="6" required></textarea>
                   <label for="message">Your Message</label>
                 </div>
                 
-                <button type="submit" class="send-btn">
+                <button type="submit" class="pageclip-form__submit send-btn">
                   <span>Send Message</span>
                   <div class="btn-icon">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -1255,18 +1392,6 @@ nav .btn:hover {
         header.style.transform = 'translateX(-50%) translateY(0)';
         header.style.opacity = '1';
       }
-      
-      // Parallax effect on project cards
-      document.querySelectorAll('.project-card').forEach((card, index) => {
-        const cardTop = card.offsetTop;
-        const cardHeight = card.offsetHeight;
-        const windowHeight = window.innerHeight;
-        
-        if (scrolled + windowHeight > cardTop && scrolled < cardTop + cardHeight) {
-          const speed = (index % 2 === 0) ? 0.05 : -0.05;
-          card.style.transform = `translateY(${(scrolled - cardTop) * speed}px)`;
-        }
-      });
     });
 
     // Enhanced menu toggle with animation
@@ -1305,8 +1430,7 @@ nav .btn:hover {
       searchInput.value = keyword;
       searchInput.dispatchEvent(new Event('input'));
       
-      // Animate filtered cards
-       // Ensure all visible cards are properly displayed
+      // Ensure all visible cards are properly displayed
       setTimeout(() => {
         projectCards.forEach((card, index) => {
           if (card.style.display !== 'none') {
@@ -1317,6 +1441,20 @@ nav .btn:hover {
             card.classList.add('visible');
           }
         });
+        
+        // Reset grid to collapsed state when filtering
+        const projectGrid = document.getElementById('projectGrid');
+        const showMoreBtn = document.getElementById('showMoreBtn');
+        const overlay = document.getElementById('projectOverlay');
+        
+        // Always reset to collapsed state when filtering
+        projectGrid.classList.remove('expanded');
+        showMoreBtn.classList.remove('expanded');
+        overlay.classList.remove('hidden');
+        showMoreBtn.querySelector('span').firstChild.textContent = 'Show More Projects ';
+        
+        // Check show more visibility and adjust height accordingly
+        checkShowMoreVisibility();
       }, 100);
     }
 
@@ -1328,6 +1466,63 @@ nav .btn:hover {
         event.target.style.transform = 'scale(1)';
         window.open(url, '_blank');
       }, 150);
+    }
+
+    // Toggle Show More Projects
+    function toggleShowMore() {
+      const projectGrid = document.getElementById('projectGrid');
+      const showMoreBtn = document.getElementById('showMoreBtn');
+      const overlay = document.getElementById('projectOverlay');
+      const btnText = showMoreBtn.querySelector('span');
+      const btnIcon = showMoreBtn.querySelector('.btn-icon');
+      
+      if (projectGrid.classList.contains('expanded')) {
+        // Collapse
+        projectGrid.classList.remove('expanded');
+        projectGrid.style.maxHeight = '1200px';
+        projectGrid.style.overflow = 'hidden';
+        overlay.classList.remove('hidden');
+        btnText.firstChild.textContent = 'Show More Projects ';
+        showMoreBtn.classList.remove('expanded');
+        
+        // Smooth scroll to projects section
+        document.getElementById('projects').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      } else {
+        // Expand
+        projectGrid.classList.add('expanded');
+        projectGrid.style.maxHeight = '10000px';
+        projectGrid.style.overflow = 'visible';
+        overlay.classList.add('hidden');
+        btnText.firstChild.textContent = 'Show Less Projects ';
+        showMoreBtn.classList.add('expanded');
+      }
+    }
+
+    // Check if we need to show the Show More button
+    function checkShowMoreVisibility() {
+      const projectGrid = document.getElementById('projectGrid');
+      const showMoreContainer = document.querySelector('.show-more-container');
+      const visibleProjectCards = document.querySelectorAll('.project-card:not([style*="display: none"])');
+      
+      // Show button only if there are more than 3 visible projects
+      if (visibleProjectCards.length > 3) {
+        showMoreContainer.style.display = 'block';
+        
+        // Reset to collapsed state if not expanded
+        if (!projectGrid.classList.contains('expanded')) {
+          projectGrid.style.maxHeight = '1200px';
+          projectGrid.style.overflow = 'hidden';
+          document.getElementById('projectOverlay').classList.remove('hidden');
+        }
+      } else {
+        showMoreContainer.style.display = 'none';
+        projectGrid.style.maxHeight = '10000px';
+        projectGrid.style.overflow = 'visible';
+        document.getElementById('projectOverlay').classList.add('hidden');
+      }
     }
 
     // Enhanced search functionality
@@ -1355,6 +1550,21 @@ nav .btn:hover {
         }
       });
 
+      // Reset to collapsed state when searching
+      const projectGrid = document.getElementById('projectGrid');
+      const showMoreBtn = document.getElementById('showMoreBtn');
+      const overlay = document.getElementById('projectOverlay');
+      
+      projectGrid.classList.remove('expanded');
+      showMoreBtn.classList.remove('expanded');
+      overlay.classList.remove('hidden');
+      showMoreBtn.querySelector('span').firstChild.textContent = 'Show More Projects ';
+
+      // Check show more visibility after filtering
+      setTimeout(() => {
+        checkShowMoreVisibility();
+      }, 100);
+
       // Show "No results" message with animation
       let noResultsMsg = document.getElementById('noResults');
       if (visibleCards === 0 && query.length > 0) {
@@ -1370,6 +1580,7 @@ nav .btn:hover {
         setTimeout(() => noResultsMsg.remove(), 300);
       }
     });
+
     // Close mobile menu when clicking on links
     document.querySelectorAll('.mobile-nav a').forEach(link => {
       link.addEventListener('click', () => {
@@ -1397,41 +1608,22 @@ nav .btn:hover {
       });
     });
 
-    // Enhanced contact form with better animation
-    document.querySelector('.modern-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const submitBtn = this.querySelector('.send-btn');
+    // Enhanced contact form with Pageclip integration
+    document.querySelector('.pageclip-form').addEventListener('submit', function(e) {
+      // Pageclip will handle the form submission
+      // Just add visual feedback
+      const submitBtn = this.querySelector('.pageclip-form__submit');
       const btnText = submitBtn.querySelector('span');
       const btnIcon = submitBtn.querySelector('.btn-icon');
-      const originalText = btnText.textContent;
       
-      // Animation on submit
-      btnText.textContent = 'Sending...';
+      // Visual feedback on submit
       btnIcon.style.transform = 'rotate(45deg)';
       submitBtn.style.transform = 'scale(0.95)';
-      submitBtn.style.opacity = '0.7';
       
       setTimeout(() => {
-        btnText.textContent = 'Sent Successfully! ✓';
         btnIcon.style.transform = 'rotate(0deg)';
-        submitBtn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
         submitBtn.style.transform = 'scale(1)';
-        submitBtn.style.opacity = '1';
-        
-        setTimeout(() => {
-          btnText.textContent = originalText;
-          btnIcon.style.transform = 'rotate(0deg)';
-          submitBtn.style.background = '';
-          this.reset();
-          
-          // Reset labels
-          this.querySelectorAll('label').forEach(label => {
-            label.style.top = '1rem';
-            label.style.fontSize = '0.9rem';
-            label.style.color = 'rgba(255, 255, 255, 0.6)';
-          });
-        }, 3000);
-      }, 1500);
+      }, 500);
     });
 
     // Initialize animations on load
@@ -1444,6 +1636,11 @@ nav .btn:hover {
       if (firstKeyword) {
         firstKeyword.classList.add('active');
       }
+      
+      // Check show more visibility
+      setTimeout(() => {
+        checkShowMoreVisibility();
+      }, 500);
       
       // Initial animation trigger
       setTimeout(() => {
