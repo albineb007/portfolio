@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Albin EB's personal portfolio website - Full Stack Developer, UI/UX Designer, SEO Enthusiast" />
+  <title>Albin EB Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #fff;
+      --gray: #ccc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--black);
+      color: var(--black);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    }
+
+    header {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+    }
+
+    nav {
+      background: var(--white);
+      padding: 0.5rem 2rem;
+      border-radius: 50px;
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: gray;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--white);
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .mobile-nav {
+      display: none;
+      position: absolute;
+      top: 70px;
+      right: 20px;
+      background: var(--white);
+      padding: 1rem;
+      border-radius: 10px;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .section {
+      padding: 4rem 2rem;
+    }
+
+    .white-section {
+      background-color: var(--white);
+      color: var(--black);
+    }
+
+    .black-section {
+      background-color: var(--black);
+      color: var(--white);
+    }
+
+    .hero {
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 2rem;
+      background: var(--black);
+      color: var(--white);
+      padding: 0.7rem 1.5rem;
+      border-radius: 30px;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--white);
+      color: var(--black);
+      border: 1px solid var(--black);
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    .projects .search-bar input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      border: 1px solid #eee;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+      background-color: var(--white);
+      color: var(--black);
+    }
+
+    .project-card h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    .project-card button {
+      margin-top: 0.5rem;
+      padding: 0.4rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--black);
+      color: var(--white);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .project-card button:hover {
+      background: var(--white);
+      color: var(--black);
+      border: 1px solid var(--black);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--white);
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #aaa;
+      margin: 0 0.5rem;
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .mobile-nav {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="home" class="section white-section hero">
+      <h1>Hi, I’m Albin EB</h1>
+      <p>Full Stack Developer | UI/UX Designer | SEO Enthusiast</p>
+      <a href="#projects" class="btn">View Projects</a>
+    </section>
+
+    <section id="about" class="section black-section">
+      <a href="resume.pdf" class="btn" download style="margin-top: 1.5rem; display: inline-block;">Download Resume</a>
+      <h2>About Me</h2>
+      <p>I am a passionate full stack developer with experience in internships, problem-solving, and building dynamic web applications. I work with HTML, CSS, JavaScript, React, Django, WordPress, MySQL, and SEO optimization to deliver high-quality digital experiences.</p>
+    </section>
+
+    <section id="projects" class="section white-section projects">
+      <h2>Projects</h2>
+      <div class="search-bar">
+        <input type="text" id="projectSearch" placeholder="Search projects by name or tech...">
+      </div>
+      <div class="project-grid" id="projectGrid">
+        <div class="project-card" data-tech="react javascript">
+          <h3>Portfolio Website</h3>
+          <p>A sleek portfolio showcasing my development and design skills.</p>
+          <p><strong>Tech Stack:</strong> HTML, CSS, JavaScript</p>
+          <button>View Code</button>
+        </div>
+        <div class="project-card" data-tech="django mysql">
+          <h3>Blog App</h3>
+          <p>A dynamic blog platform with user authentication and post management.</p>
+          <p><strong>Tech Stack:</strong> Django, MySQL</p>
+          <button>Live Demo</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section black-section">
+      <h2>Contact</h2>
+      <p>Email: <a href="mailto:albineb@example.com">albineb@example.com</a></p>
+      <p>LinkedIn: <a href="https://linkedin.com/in/albineb">albineb</a></p>
+      <p>GitHub: <a href="https://github.com/albineb">albineb</a></p>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 Albin EB. All rights reserved.</p>
+      <a href="https://github.com/albineb">GitHub</a>
+      <a href="https://linkedin.com/in/albineb">LinkedIn</a>
+      <a href="mailto:albineb@example.com">Email</a>
+    </footer>
+  </main>
+
+  <script>
+    function toggleMenu() {
+      const mobileNav = document.getElementById('mobileNav');
+      mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    const searchInput = document.getElementById('projectSearch');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    searchInput.addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      projectCards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query) ? 'block' : 'none';
+      });
+    });
+  </script>
+</body>
+
+</html>
