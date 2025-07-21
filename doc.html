@@ -487,6 +487,7 @@ nav .btn:hover {
       padding: 1rem;
       border-radius: 8px;
       border-left: 4px solid var(--black);
+      border: 2px solid #e0e0e0;
     }
 
     .project-details p {
@@ -1369,7 +1370,7 @@ nav .btn:hover {
       createParticles();
       
       // Set active keyword
-      const firstKeyword = document.querySelector('.keyword:last-child');
+      const firstKeyword = document.querySelector('.keyword:first-child');
       if (firstKeyword) {
         firstKeyword.classList.add('active');
       }
