@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en">https://github.com/albineb007/portfolio/edit/main/doc.html
 
 <head>
   <meta charset="UTF-8" />
@@ -1234,11 +1234,15 @@ nav .btn:hover {
       searchInput.dispatchEvent(new Event('input'));
       
       // Animate filtered cards
+       // Ensure all visible cards are properly displayed
       setTimeout(() => {
         projectCards.forEach((card, index) => {
           if (card.style.display !== 'none') {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0) scale(1)';
             card.style.animationDelay = (index * 0.1) + 's';
             card.classList.add('scale-in');
+            card.classList.add('visible');
           }
         });
       }, 100);
@@ -1269,10 +1273,13 @@ nav .btn:hover {
         
         if (text.includes(query) || techStack.includes(query)) {
           card.style.display = 'block';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0) scale(1)';
           card.style.animationDelay = (index * 0.1) + 's';
           visibleCards++;
         } else {
           card.style.display = 'none';
+          card.style.opacity = '0';
         }
       });
 
@@ -1291,7 +1298,6 @@ nav .btn:hover {
         setTimeout(() => noResultsMsg.remove(), 300);
       }
     });
-
     // Close mobile menu when clicking on links
     document.querySelectorAll('.mobile-nav a').forEach(link => {
       link.addEventListener('click', () => {
