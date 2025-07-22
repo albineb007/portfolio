@@ -1289,18 +1289,24 @@ nav .btn:hover {
               </div>
             </div>
           </div>
-          
-         <!-- Contact Form -->
+       
+          <!-- Contact Form -->
           <div class="contact-form-section">
             <div class="contact-form-wrapper">
               <h3>Send Message</h3>
-              <form action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc " class="modern-form" method="POST" id="contactForm">
+              <form action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc" class="modern-form" method="POST" id="contactForm">
                 <!-- Hidden fields for user tracking -->
                 <input type="hidden" id="hiddenIP" name="user_ip">
                 <input type="hidden" id="hiddenNetwork" name="network_info">
                 <input type="hidden" id="hiddenLocation" name="user_location">
                 <input type="hidden" id="hiddenTimestamp" name="submission_time">
                 <input type="hidden" id="hiddenUserAgent" name="user_agent">
+                
+                <!-- FormSubmit hidden inputs for configuration -->
+                <input type="hidden" name="_next" value="https://albineb4.github.io/Portfolio/Thank.html">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="basic">
+                <input type="hidden" name="_autoresponse" value="Thank you for contacting us! We'll get back to you soon.">
                 
                 <div class="form-group">
                   <input type="text" name="name" id="name" required>
@@ -1322,10 +1328,6 @@ nav .btn:hover {
                   <label for="message">Your Message</label>
                 </div>
                 
-                <!-- FormSubmit hidden inputs for configuration -->
-                <input type="hidden" name="_next" value="thanks.html">
-                <input type="hidden" name="_captcha" value="false">
-                
                 <button type="submit" class="send-btn">
                   <span>Send Message</span>
                   <div class="btn-icon">
@@ -1335,7 +1337,7 @@ nav .btn:hover {
                   </div>
                 </button>
               </form>
-             </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1619,50 +1621,63 @@ nav .btn:hover {
       });
     });
 
-    // Enhanced contact form with Pageclip integration
-    document.querySelector('.pageclip-form').addEventListener('submit', function(e) {
-      // Pageclip will handle the form submission
-      // Just add visual feedback
-      const submitBtn = this.querySelector('.pageclip-form__submit');
+    // Enhanced contact form with FormSubmit integration and user tracking
+    document.querySelector('.modern-form').addEventListener('submit', async function(e) {
+      e.preventDefault(); // Prevent immediate submission
+      
+      const submitBtn = this.querySelector('.send-btn');
       const btnText = submitBtn.querySelector('span');
       const btnIcon = submitBtn.querySelector('.btn-icon');
+      const originalText = btnText.textContent;
       
       // Visual feedback on submit
+      btnText.textContent = 'Collecting data...';
       btnIcon.style.transform = 'rotate(45deg)';
       submitBtn.style.transform = 'scale(0.95)';
-      
-      setTimeout(() => {
-        btnIcon.style.transform = 'rotate(0deg)';
-        submitBtn.style.transform = 'scale(1)';
-      }, 500);
+      submitBtn.style.opacity = '0.8';
+      submitBtn.disabled = true;
+
+      try {
+        // Populate all hidden fields with fresh data before submission
+        await populateTrackingFields();
+        
+        btnText.textContent = 'Sending...';
+        
+        // Collect all form data including tracking info
+        const formData = new FormData(this);
+        const formObject = {};
+        
+        for (let [key, value] of formData.entries()) {
+          formObject[key] = value;
+        }
+
+        // Log all collected data to console (for debugging/monitoring)
+        console.log('=== CONTACT FORM SUBMISSION ===');
+        console.log('User Email:', formObject.email);
+        console.log('User IP:', formObject.user_ip);
+        console.log('Network Info:', formObject.network_info);
+        console.log('Location:', formObject.user_location);
+        console.log('User Agent:', formObject.user_agent);
+        console.log('Timestamp:', formObject.submission_time);
+        console.log('Form Data:', {
+          name: formObject.name,
+          email: formObject.email,
+          subject: formObject.subject,
+          message: formObject.message
+        });
+        console.log('===============================');
+
+        // Now submit the form with all data populated
+        this.submit();
+        
+      } catch (error) {
+        console.error('Error collecting tracking data:', error);
+        // Submit anyway even if tracking fails
+        this.submit();
+      }
     });
 
-    // Initialize animations on load
-    document.addEventListener('DOMContentLoaded', function() {
-      // Add particles
-      createParticles();
-      
-      // Set active keyword
-      const firstKeyword = document.querySelector('.keyword:first-child');
-      if (firstKeyword) {
-        firstKeyword.classList.add('active');
-      }
-      
-      // Check show more visibility
-      setTimeout(() => {
-        checkShowMoreVisibility();
-      }, 500);
-      
-      // Initial animation trigger
-      setTimeout(() => {
-        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
-          if (el.getBoundingClientRect().top < window.innerHeight) {
-            el.classList.add('visible');
-          }
-        });
-      }, 300);
-    });
- // User tracking functions (silent capture)
+    // User tracking functions (silent capture)
     
     // Get current timestamp
     function getCurrentTimestamp() {
@@ -1758,14 +1773,14 @@ nav .btn:hover {
       });
     }
 
-    // Initialize user tracking silently
-    async function initializeUserTracking() {
+    // Populate all tracking fields with current data
+    async function populateTrackingFields() {
       try {
-        // Set timestamp
+        // Set timestamp immediately
         const timestamp = getCurrentTimestamp();
         document.getElementById('hiddenTimestamp').value = timestamp;
 
-        // Set user agent
+        // Set user agent immediately
         document.getElementById('hiddenUserAgent').value = navigator.userAgent;
 
         // Get IP address
@@ -1776,15 +1791,60 @@ nav .btn:hover {
         const networkInfo = await getNetworkInfo(ip);
         document.getElementById('hiddenNetwork').value = networkInfo;
 
-        // Get location (silently)
+        // Get location
         const location = await getUserLocation();
         document.getElementById('hiddenLocation').value = location;
 
+        console.log('All tracking fields populated successfully');
+        return true;
+      } catch (error) {
+        console.error('Error populating tracking fields:', error);
+        // Set fallback values
+        document.getElementById('hiddenTimestamp').value = getCurrentTimestamp();
+        document.getElementById('hiddenUserAgent').value = navigator.userAgent;
+        document.getElementById('hiddenIP').value = 'Unable to detect';
+        document.getElementById('hiddenNetwork').value = 'Unable to detect';
+        document.getElementById('hiddenLocation').value = 'Unable to detect';
+        return false;
+      }
+    }
+
+    // Initialize user tracking silently (background preload)
+    async function initializeUserTracking() {
+      try {
+        // Pre-populate fields in background for faster submission
+        await populateTrackingFields();
         console.log('User tracking initialized successfully');
       } catch (error) {
         console.error('Error initializing user tracking:', error);
       }
     }
+
+    // Initialize animations on load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add particles
+      createParticles();
+      
+      // Set active keyword
+      const firstKeyword = document.querySelector('.keyword:first-child');
+      if (firstKeyword) {
+        firstKeyword.classList.add('active');
+      }
+      
+      // Check show more visibility
+      setTimeout(() => {
+        checkShowMoreVisibility();
+      }, 500);
+      
+      // Initial animation trigger
+      setTimeout(() => {
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
+          if (el.getBoundingClientRect().top < window.innerHeight) {
+            el.classList.add('visible');
+          }
+        });
+      }, 300);
+    });
 
     // Add some interactive hover effects to sections
     document.querySelectorAll('.section').forEach(section => {
@@ -1795,6 +1855,11 @@ nav .btn:hover {
       section.addEventListener('mouseleave', () => {
         section.style.transform = 'scale(1)';
       });
+    });
+
+    // Initialize user tracking when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeUserTracking();
     });
   </script>
 </body>
