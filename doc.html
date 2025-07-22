@@ -2166,51 +2166,48 @@ nav .btn:hover {
 
     // Enhanced contact form with FormSubmit integration and user tracking
     document.querySelector('.modern-form').addEventListener('submit', async function(e) {
+      e.preventDefault(); // Prevent submission until we're ready
+      
       const submitBtn = this.querySelector('.send-btn');
       const btnText = submitBtn.querySelector('span');
       const btnIcon = submitBtn.querySelector('.btn-icon');
       const originalText = btnText.textContent;
+      const form = this;
       
       // Visual feedback on submit
-      btnText.textContent = 'Sending...';
+      btnText.textContent = 'Collecting data...';
       btnIcon.style.transform = 'rotate(45deg)';
       submitBtn.style.transform = 'scale(0.95)';
       submitBtn.style.opacity = '0.8';
       submitBtn.disabled = true;
 
       try {
-        // Populate all hidden fields with current data before submission
+        // Wait for all tracking fields to be populated
+        btnText.textContent = 'Preparing...';
         await populateTrackingFields();
         
-        // Collect all form data including tracking info for logging
-        const formData = new FormData(this);
-        const formObject = {};
+        btnText.textContent = 'Sending...';
         
-        for (let [key, value] of formData.entries()) {
-          formObject[key] = value;
-        }
-
-        // Log all collected data to console (for debugging/monitoring)
-        console.log('=== CONTACT FORM SUBMISSION ===');
-        console.log('User Email:', formObject.email);
-        console.log('User IP:', formObject.user_ip);
-        console.log('Network Info:', formObject.network_info);
-        console.log('Location:', formObject.user_location);
-        console.log('User Agent:', formObject.user_agent);
-        console.log('Timestamp:', formObject.submission_time);
-        console.log('Form Data:', {
-          name: formObject.name,
-          email: formObject.email,
-          subject: formObject.subject,
-          message: formObject.message
-        });
-        console.log('===============================');
-
-        // Form will submit naturally since we didn't preventDefault
+        // Small delay to ensure all fields are populated
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Now submit the form manually with all data ready
+        form.removeEventListener('submit', arguments.callee);
+        form.submit();
         
       } catch (error) {
         console.error('Error collecting tracking data:', error);
-        // Form will still submit naturally even if tracking fails
+        
+        // Reset button state
+        btnText.textContent = originalText;
+        btnIcon.style.transform = 'rotate(0deg)';
+        submitBtn.style.transform = 'scale(1)';
+        submitBtn.style.opacity = '1';
+        submitBtn.disabled = false;
+        
+        // Submit without tracking data as fallback
+        form.removeEventListener('submit', arguments.callee);
+        form.submit();
       }
     });
 
@@ -2312,36 +2309,80 @@ nav .btn:hover {
 
     // Populate all tracking fields with current data
     async function populateTrackingFields() {
+      console.log('Starting to populate tracking fields...');
+      
       try {
-        // Set timestamp immediately
+        // Set timestamp and user agent immediately (these are synchronous)
         const timestamp = getCurrentTimestamp();
+        const userAgent = navigator.userAgent;
+        
         document.getElementById('hiddenTimestamp').value = timestamp;
+        document.getElementById('hiddenUserAgent').value = userAgent;
+        console.log('Set timestamp and user agent');
 
-        // Set user agent immediately
-        document.getElementById('hiddenUserAgent').value = navigator.userAgent;
-
-        // Get IP address
-        const ip = await getUserIP();
+        // Try to get IP address (with timeout)
+        let ip = 'Unable to detect';
+        try {
+          const ipResponse = await Promise.race([
+            fetch('https://api.ipify.org?format=json'),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('IP timeout')), 3000))
+          ]);
+          const ipData = await ipResponse.json();
+          ip = ipData.ip;
+          console.log('Got IP:', ip);
+        } catch (error) {
+          console.log('IP detection failed:', error.message);
+        }
         document.getElementById('hiddenIP').value = ip;
 
-        // Get network information
-        const networkInfo = await getNetworkInfo(ip);
+        // Try to get network information (with timeout)
+        let networkInfo = JSON.stringify({ error: 'Unable to detect' });
+        try {
+          const networkResponse = await Promise.race([
+            fetch(`https://ipapi.co/${ip}/json/`),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Network timeout')), 3000))
+          ]);
+          const networkData = await networkResponse.json();
+          networkInfo = JSON.stringify({
+            isp: networkData.org || 'Unknown ISP',
+            city: networkData.city || 'Unknown',
+            region: networkData.region || 'Unknown',
+            country: networkData.country_name || 'Unknown',
+            timezone: networkData.timezone || 'Unknown'
+          });
+          console.log('Got network info');
+        } catch (error) {
+          console.log('Network detection failed:', error.message);
+        }
         document.getElementById('hiddenNetwork').value = networkInfo;
 
-        // Get location
-        const location = await getUserLocation();
+        // Try to get location (with timeout)
+        let location = JSON.stringify({ error: 'Unable to detect' });
+        try {
+          location = await Promise.race([
+            getUserLocation(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Location timeout')), 3000))
+          ]);
+          console.log('Got location info');
+        } catch (error) {
+          console.log('Location detection failed:', error.message);
+          location = JSON.stringify({ error: error.message, status: 'timeout' });
+        }
         document.getElementById('hiddenLocation').value = location;
 
         console.log('All tracking fields populated successfully');
         return true;
+        
       } catch (error) {
-        console.error('Error populating tracking fields:', error);
-        // Set fallback values
+        console.error('Error in populateTrackingFields:', error);
+        
+        // Set safe fallback values for all fields
         document.getElementById('hiddenTimestamp').value = getCurrentTimestamp();
-        document.getElementById('hiddenUserAgent').value = navigator.userAgent;
-        document.getElementById('hiddenIP').value = 'Unable to detect';
-        document.getElementById('hiddenNetwork').value = 'Unable to detect';
-        document.getElementById('hiddenLocation').value = 'Unable to detect';
+        document.getElementById('hiddenUserAgent').value = navigator.userAgent || 'Unknown';
+        document.getElementById('hiddenIP').value = 'Detection failed';
+        document.getElementById('hiddenNetwork').value = JSON.stringify({ error: 'Detection failed' });
+        document.getElementById('hiddenLocation').value = JSON.stringify({ error: 'Detection failed' });
+        
         return false;
       }
     }
