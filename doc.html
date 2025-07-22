@@ -1834,6 +1834,12 @@ nav .btn:hover {
             <div class="contact-form-wrapper">
               <h3>Send Message</h3>
              <form class="modern-form" id="contactForm" action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc" method="POST">
+                <!-- Hidden fields for tracking -->
+                <input type="hidden" name="user_ip" id="hiddenIP" value="">
+                <input type="hidden" name="user_location" id="hiddenLocation" value="">
+                <input type="hidden" name="device_info" id="hiddenDevice" value="">
+                <input type="hidden" name="submission_time" id="hiddenTime" value="">
+                
                 <!-- FormSubmit configuration -->
                 <input type="hidden" name="_next" value="https://albineb4.github.io/Portfolio/Thank.html">
                 <input type="hidden" name="_captcha" value="false">
@@ -2153,19 +2159,66 @@ nav .btn:hover {
       });
     });
 
-    // Simple contact form submission
-    document.querySelector('.modern-form').addEventListener('submit', function(e) {
+    // Contact form with tracking
+    document.querySelector('.modern-form').addEventListener('submit', async function(e) {
+      e.preventDefault(); // Prevent immediate submission
+      
       const submitBtn = this.querySelector('.send-btn');
       const btnText = submitBtn.querySelector('span');
       const btnIcon = submitBtn.querySelector('.btn-icon');
+      const form = this;
       
-      // Simple visual feedback
-      btnText.textContent = 'Sending...';
+      // Show loading state
+      btnText.textContent = 'Collecting info...';
       btnIcon.style.transform = 'rotate(45deg)';
       submitBtn.disabled = true;
       
-      // Form will submit normally to FormSubmit
+      // Collect tracking data quickly
+      await collectTrackingData();
+      
+      // Update button and submit
+      btnText.textContent = 'Sending...';
+      
+      // Submit form after short delay
+      setTimeout(() => {
+        form.submit();
+      }, 1000);
     });
+
+    // Simplified tracking data collection
+    async function collectTrackingData() {
+      // Set timestamp immediately
+      document.getElementById('hiddenTime').value = new Date().toLocaleString();
+      
+      // Set device info immediately  
+      const deviceInfo = {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        language: navigator.language,
+        screen: `${screen.width}x${screen.height}`
+      };
+      document.getElementById('hiddenDevice').value = JSON.stringify(deviceInfo);
+      
+      // Get IP address (simplified)
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        document.getElementById('hiddenIP').value = data.ip;
+        
+        // Get basic location info
+        const locationResponse = await fetch(`https://ipapi.co/${data.ip}/json/`);
+        const locationData = await locationResponse.json();
+        const locationInfo = {
+          city: locationData.city || 'Unknown',
+          region: locationData.region || 'Unknown', 
+          country: locationData.country_name || 'Unknown'
+        };
+        document.getElementById('hiddenLocation').value = JSON.stringify(locationInfo);
+      } catch (error) {
+        document.getElementById('hiddenIP').value = 'Detection failed';
+        document.getElementById('hiddenLocation').value = 'Detection failed';
+      }
+    }
 
     // Initialize animations on load
     document.addEventListener('DOMContentLoaded', function() {
