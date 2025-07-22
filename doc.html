@@ -1833,24 +1833,13 @@ nav .btn:hover {
           <div class="contact-form-section">
             <div class="contact-form-wrapper">
               <h3>Send Message</h3>
-             <form class="modern-form" id="contactForm" action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc" method="POST" enctype="multipart/form-data">
-                <!-- Hidden fields for user tracking -->
-                <input type="hidden" id="hiddenIP" name="user_ip">
-                <input type="hidden" id="hiddenNetwork" name="network_info">
-                <input type="hidden" id="hiddenLocation" name="user_location">
-                <input type="hidden" id="hiddenTimestamp" name="submission_time">
-                <input type="hidden" id="hiddenUserAgent" name="user_agent">
-                <input type="hidden" id="hiddenLoggedEmail" name="logged_user_email">
-                
-                <!-- FormSubmit hidden inputs for configuration -->
+             <form class="modern-form" id="contactForm" action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc" method="POST">
+                <!-- FormSubmit configuration -->
                 <input type="hidden" name="_next" value="https://albineb4.github.io/Portfolio/Thank.html">
                 <input type="hidden" name="_captcha" value="false">
                 <input type="hidden" name="_template" value="basic">
-                <input type="hidden" name="_autoresponse" value="Thank you for contacting us! We'll get back to you soon.">
                 <input type="hidden" name="_subject" value="New Portfolio Contact Form Submission">
-                <input type="hidden" name="_cc" value="">
-          
-               
+                
                 <div class="form-group">
                   <input type="text" name="name" id="name" required>
                   <label for="name">Your Name</label>
@@ -2164,239 +2153,19 @@ nav .btn:hover {
       });
     });
 
-    // Enhanced contact form with FormSubmit integration and user tracking
-    document.querySelector('.modern-form').addEventListener('submit', async function(e) {
-      e.preventDefault(); // Prevent submission until we're ready
-      
+    // Simple contact form submission
+    document.querySelector('.modern-form').addEventListener('submit', function(e) {
       const submitBtn = this.querySelector('.send-btn');
       const btnText = submitBtn.querySelector('span');
       const btnIcon = submitBtn.querySelector('.btn-icon');
-      const originalText = btnText.textContent;
-      const form = this;
       
-      // Visual feedback on submit
-      btnText.textContent = 'Collecting data...';
+      // Simple visual feedback
+      btnText.textContent = 'Sending...';
       btnIcon.style.transform = 'rotate(45deg)';
-      submitBtn.style.transform = 'scale(0.95)';
-      submitBtn.style.opacity = '0.8';
       submitBtn.disabled = true;
-
-      try {
-        // Wait for all tracking fields to be populated
-        btnText.textContent = 'Preparing...';
-        await populateTrackingFields();
-        
-        btnText.textContent = 'Sending...';
-        
-        // Small delay to ensure all fields are populated
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Now submit the form manually with all data ready
-        form.removeEventListener('submit', arguments.callee);
-        form.submit();
-        
-      } catch (error) {
-        console.error('Error collecting tracking data:', error);
-        
-        // Reset button state
-        btnText.textContent = originalText;
-        btnIcon.style.transform = 'rotate(0deg)';
-        submitBtn.style.transform = 'scale(1)';
-        submitBtn.style.opacity = '1';
-        submitBtn.disabled = false;
-        
-        // Submit without tracking data as fallback
-        form.removeEventListener('submit', arguments.callee);
-        form.submit();
-      }
-    });
-
-    // User tracking functions (silent capture)
-    
-    // Get current timestamp
-    function getCurrentTimestamp() {
-      const now = new Date();
-      return now.toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        timeZoneName: 'short'
-      });
-    }
-
-    // Get user's IP address
-    async function getUserIP() {
-      try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        return data.ip;
-      } catch (error) {
-        console.error('Error fetching IP:', error);
-        return 'Unable to detect';
-      }
-    }
-
-    // Get detailed network information
-    async function getNetworkInfo(ip) {
-      try {
-        const response = await fetch(`https://ipapi.co/${ip}/json/`);
-        const data = await response.json();
-        return JSON.stringify({
-          isp: data.org || 'Unknown ISP',
-          city: data.city || 'Unknown',
-          region: data.region || 'Unknown',
-          country: data.country_name || 'Unknown',
-          timezone: data.timezone || 'Unknown'
-        });
-      } catch (error) {
-        console.error('Error fetching network info:', error);
-        return JSON.stringify({
-          isp: 'Unable to detect',
-          city: 'Unknown',
-          region: 'Unknown',
-          country: 'Unknown'
-        });
-      }
-    }
-
-    // Get user's location (silent request)
-    function getUserLocation() {
-      return new Promise((resolve) => {
-        if (!navigator.geolocation) {
-          resolve(JSON.stringify({ error: 'Geolocation not supported' }));
-          return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            resolve(JSON.stringify({
-              latitude: latitude.toFixed(6),
-              longitude: longitude.toFixed(6),
-              accuracy: position.coords.accuracy,
-              status: 'granted'
-            }));
-          },
-          (error) => {
-            let errorMessage = '';
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                errorMessage = 'Location access denied by user';
-                break;
-              case error.POSITION_UNAVAILABLE:
-                errorMessage = 'Location information unavailable';
-                break;
-              case error.TIMEOUT:
-                errorMessage = 'Location request timeout';
-                break;
-              default:
-                errorMessage = 'Unknown location error';
-                break;
-            }
-            resolve(JSON.stringify({ error: errorMessage, status: 'denied' }));
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-          }
-        );
-      });
-    }
-
-    // Populate all tracking fields with current data
-    async function populateTrackingFields() {
-      console.log('Starting to populate tracking fields...');
       
-      try {
-        // Set timestamp and user agent immediately (these are synchronous)
-        const timestamp = getCurrentTimestamp();
-        const userAgent = navigator.userAgent;
-        
-        document.getElementById('hiddenTimestamp').value = timestamp;
-        document.getElementById('hiddenUserAgent').value = userAgent;
-        console.log('Set timestamp and user agent');
-
-        // Try to get IP address (with timeout)
-        let ip = 'Unable to detect';
-        try {
-          const ipResponse = await Promise.race([
-            fetch('https://api.ipify.org?format=json'),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('IP timeout')), 3000))
-          ]);
-          const ipData = await ipResponse.json();
-          ip = ipData.ip;
-          console.log('Got IP:', ip);
-        } catch (error) {
-          console.log('IP detection failed:', error.message);
-        }
-        document.getElementById('hiddenIP').value = ip;
-
-        // Try to get network information (with timeout)
-        let networkInfo = JSON.stringify({ error: 'Unable to detect' });
-        try {
-          const networkResponse = await Promise.race([
-            fetch(`https://ipapi.co/${ip}/json/`),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Network timeout')), 3000))
-          ]);
-          const networkData = await networkResponse.json();
-          networkInfo = JSON.stringify({
-            isp: networkData.org || 'Unknown ISP',
-            city: networkData.city || 'Unknown',
-            region: networkData.region || 'Unknown',
-            country: networkData.country_name || 'Unknown',
-            timezone: networkData.timezone || 'Unknown'
-          });
-          console.log('Got network info');
-        } catch (error) {
-          console.log('Network detection failed:', error.message);
-        }
-        document.getElementById('hiddenNetwork').value = networkInfo;
-
-        // Try to get location (with timeout)
-        let location = JSON.stringify({ error: 'Unable to detect' });
-        try {
-          location = await Promise.race([
-            getUserLocation(),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Location timeout')), 3000))
-          ]);
-          console.log('Got location info');
-        } catch (error) {
-          console.log('Location detection failed:', error.message);
-          location = JSON.stringify({ error: error.message, status: 'timeout' });
-        }
-        document.getElementById('hiddenLocation').value = location;
-
-        console.log('All tracking fields populated successfully');
-        return true;
-        
-      } catch (error) {
-        console.error('Error in populateTrackingFields:', error);
-        
-        // Set safe fallback values for all fields
-        document.getElementById('hiddenTimestamp').value = getCurrentTimestamp();
-        document.getElementById('hiddenUserAgent').value = navigator.userAgent || 'Unknown';
-        document.getElementById('hiddenIP').value = 'Detection failed';
-        document.getElementById('hiddenNetwork').value = JSON.stringify({ error: 'Detection failed' });
-        document.getElementById('hiddenLocation').value = JSON.stringify({ error: 'Detection failed' });
-        
-        return false;
-      }
-    }
-
-    // Initialize user tracking silently (background preload)
-    async function initializeUserTracking() {
-      try {
-        // Pre-populate fields in background for faster submission
-        await populateTrackingFields();
-        console.log('User tracking initialized successfully');
-      } catch (error) {
-        console.error('Error initializing user tracking:', error);
-      }
-    }
+      // Form will submit normally to FormSubmit
+    });
 
     // Initialize animations on load
     document.addEventListener('DOMContentLoaded', function() {
@@ -2435,10 +2204,6 @@ nav .btn:hover {
       });
     });
 
-    // Initialize user tracking when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      initializeUserTracking();
-    });
   </script>
 </body>
 
