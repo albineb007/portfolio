@@ -1147,6 +1147,276 @@ nav .btn:hover {
       background: var(--accent-color) !important;
     }
 
+    /* Education Section */
+    .education-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+
+    .education-item {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .education-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+
+    .education-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      border-color: var(--primary-color);
+    }
+
+    .education-item:hover::before {
+      width: 100%;
+      opacity: 0.1;
+    }
+
+    .education-content {
+      flex: 1;
+    }
+
+    .education-content h3 {
+      color: var(--text-color);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .education-institution h4 {
+      color: var(--primary-color);
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .education-institution p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .education-details p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .education-icon {
+      flex-shrink: 0;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+    }
+
+    .education-item:hover .education-icon {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* Dark theme education styles */
+    body.colorful-theme .education-item {
+      background: rgba(248, 250, 252, 0.05) !important;
+      border: 1px solid var(--border-dark) !important;
+    }
+
+    body.colorful-theme .education-item::before {
+      background: var(--primary-color) !important;
+    }
+
+    body.colorful-theme .education-content h3 {
+      color: var(--text-light) !important;
+    }
+
+    body.colorful-theme .education-institution h4 {
+      color: var(--primary-color) !important;
+    }
+
+    body.colorful-theme .education-institution p,
+    body.colorful-theme .education-details p {
+      color: rgba(226, 232, 240, 0.8) !important;
+    }
+
+    /* Responsive education styles */
+    @media (max-width: 768px) {
+      .education-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.5rem;
+      }
+
+      .education-content h3 {
+        font-size: 1.3rem;
+      }
+
+      .education-institution h4 {
+        font-size: 1.1rem;
+      }
+
+      .education-icon svg {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    /* Achievements Section */
+    .achievements-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 0;
+      display: grid;
+      gap: 2rem;
+    }
+
+    .achievement-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .achievement-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+
+    .achievement-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      border-color: var(--primary-color);
+    }
+
+    .achievement-item:hover::before {
+      width: 100%;
+      opacity: 0.1;
+    }
+
+    .achievement-icon {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 70px;
+      height: 70px;
+      background: rgba(var(--primary-color-rgb), 0.1);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .achievement-item:hover .achievement-icon {
+      transform: scale(1.1);
+      background: rgba(var(--primary-color-rgb), 0.2);
+    }
+
+    .achievement-content h3 {
+      color: var(--text-color);
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .achievement-organization {
+      color: var(--primary-color);
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    .achievement-description {
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* Dark theme achievements styles */
+    body.colorful-theme .achievement-item {
+      background: rgba(248, 250, 252, 0.05) !important;
+      border: 1px solid var(--border-dark) !important;
+    }
+
+    body.colorful-theme .achievement-item::before {
+      background: var(--primary-color) !important;
+    }
+
+    body.colorful-theme .achievement-content h3 {
+      color: var(--text-light) !important;
+    }
+
+    body.colorful-theme .achievement-organization {
+      color: var(--primary-color) !important;
+    }
+
+    body.colorful-theme .achievement-description {
+      color: rgba(226, 232, 240, 0.8) !important;
+    }
+
+    body.colorful-theme .achievement-icon {
+      background: rgba(var(--primary-color-rgb), 0.15) !important;
+    }
+
+    /* Responsive achievements styles */
+    @media (max-width: 768px) {
+      .achievement-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.5rem;
+      }
+
+      .achievement-content h3 {
+        font-size: 1.2rem;
+      }
+
+      .achievement-organization {
+        font-size: 1rem;
+      }
+
+      .achievement-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+      }
+
+      .achievement-icon svg {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
   </style>
 </head>
 
@@ -1227,6 +1497,50 @@ nav .btn:hover {
             <span class="skill-tag">Git</span>
             <span class="skill-tag">VS Code</span>
             <span class="skill-tag">Google Apps Script</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="achievements" class="section black-section slide-in-left">
+      <h2 class="section-title">Achievements</h2>
+      <div class="achievements-container">
+        <div class="achievement-item">
+          <div class="achievement-icon">
+            <svg width="50" height="50" fill="var(--primary-color)" viewBox="0 0 24 24">
+              <path d="M12,2L15.09,8.26L22,9L17,14L18.18,21L12,17.77L5.82,21L7,14L2,9L8.91,8.26L12,2Z"/>
+            </svg>
+          </div>
+          <div class="achievement-content">
+            <h3>1st Place – Web Design Competition</h3>
+            <p class="achievement-organization">Ramaiah Institute of Technology</p>
+            <p class="achievement-description">Won first place in web design competition demonstrating exceptional UI/UX skills and creative problem-solving abilities.</p>
+          </div>
+        </div>
+
+        <div class="achievement-item">
+          <div class="achievement-icon">
+            <svg width="50" height="50" fill="var(--primary-color)" viewBox="0 0 24 24">
+              <path d="M12,2L15.09,8.26L22,9L17,14L18.18,21L12,17.77L5.82,21L7,14L2,9L8.91,8.26L12,2Z"/>
+            </svg>
+          </div>
+          <div class="achievement-content">
+            <h3>1st Place – Website Competition</h3>
+            <p class="achievement-organization">St. Claret College for TEDx Website</p>
+            <p class="achievement-description">Developed award-winning TEDx website showcasing modern web technologies and outstanding user experience design.</p>
+          </div>
+        </div>
+
+        <div class="achievement-item">
+          <div class="achievement-icon">
+            <svg width="50" height="50" fill="var(--primary-color)" viewBox="0 0 24 24">
+              <path d="M12,2A2,2 0 0,1 14,4V8A2,2 0 0,1 12,10A2,2 0 0,1 10,8V4A2,2 0 0,1 12,2M21,9V7H15V9H21M13,16.5H11V15A1,1 0 0,0 10,14H9V12.5H11.5V11H13V12.5H15.5V14H14A1,1 0 0,0 13,15V16.5M12,20.5L8,16.5H16L12,20.5Z"/>
+            </svg>
+          </div>
+          <div class="achievement-content">
+            <h3>NCC B & C Certificate Holder</h3>
+            <p class="achievement-organization">National Cadet Corps</p>
+            <p class="achievement-description">Demonstrated leadership, discipline, and commitment through successful completion of NCC B and C certification programs.</p>
           </div>
         </div>
       </div>
@@ -1420,7 +1734,29 @@ nav .btn:hover {
         </button>
       </div>
     </section>
-
+    <section id="education" class="section white-section slide-in-left">
+      <h2 class="section-title">Education</h2>
+      <div class="education-container">
+        <div class="education-item">
+          <svg width="60" height="60" fill="var(--primary-color)" viewBox="0 0 24 24">
+              <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z"/>
+            </svg>
+          <div class="education-content">
+            <h3>Bachelor of Computer Applications (BCA)</h3>
+            <div class="education-institution">
+              <h4>ST. Claret College Autonomous</h4>
+              <p>Bangalore University</p>
+            </div>
+            <div class="education-details">
+              <p>Comprehensive program covering programming fundamentals, database management, software development, and computer applications.</p>
+            </div>
+          </div>
+          <div class="education-icon">
+            
+          </div>
+        </div>
+      </div>
+    </section>
     <section id="contact" class="section black-section slide-in-left">
       <div class="contact-wrapper">
         <div class="contact-header">
