@@ -1290,11 +1290,18 @@ nav .btn:hover {
             </div>
           </div>
           
-          <!-- Contact Form -->
+         <!-- Contact Form -->
           <div class="contact-form-section">
             <div class="contact-form-wrapper">
               <h3>Send Message</h3>
-              <form action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc " class="modern-form" method="POST">
+              <form action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc " class="modern-form" method="POST" id="contactForm">
+                <!-- Hidden fields for user tracking -->
+                <input type="hidden" id="hiddenIP" name="user_ip">
+                <input type="hidden" id="hiddenNetwork" name="network_info">
+                <input type="hidden" id="hiddenLocation" name="user_location">
+                <input type="hidden" id="hiddenTimestamp" name="submission_time">
+                <input type="hidden" id="hiddenUserAgent" name="user_agent">
+                
                 <div class="form-group">
                   <input type="text" name="name" id="name" required>
                   <label for="name">Your Name</label>
@@ -1316,7 +1323,7 @@ nav .btn:hover {
                 </div>
                 
                 <!-- FormSubmit hidden inputs for configuration -->
-                <input type="hidden" name="_next" value="https://albineb007.github.io/thanks.html">
+                <input type="hidden" name="_next" value="Thank.html">
                 <input type="hidden" name="_captcha" value="false">
                 
                 <button type="submit" class="send-btn">
@@ -1328,8 +1335,7 @@ nav .btn:hover {
                   </div>
                 </button>
               </form>
-          
-            </div>
+             </div>
           </div>
         </div>
       </div>
@@ -1656,6 +1662,129 @@ nav .btn:hover {
         });
       }, 300);
     });
+ // User tracking functions (silent capture)
+    
+    // Get current timestamp
+    function getCurrentTimestamp() {
+      const now = new Date();
+      return now.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZoneName: 'short'
+      });
+    }
+
+    // Get user's IP address
+    async function getUserIP() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+      } catch (error) {
+        console.error('Error fetching IP:', error);
+        return 'Unable to detect';
+      }
+    }
+
+    // Get detailed network information
+    async function getNetworkInfo(ip) {
+      try {
+        const response = await fetch(`https://ipapi.co/${ip}/json/`);
+        const data = await response.json();
+        return JSON.stringify({
+          isp: data.org || 'Unknown ISP',
+          city: data.city || 'Unknown',
+          region: data.region || 'Unknown',
+          country: data.country_name || 'Unknown',
+          timezone: data.timezone || 'Unknown'
+        });
+      } catch (error) {
+        console.error('Error fetching network info:', error);
+        return JSON.stringify({
+          isp: 'Unable to detect',
+          city: 'Unknown',
+          region: 'Unknown',
+          country: 'Unknown'
+        });
+      }
+    }
+
+    // Get user's location (silent request)
+    function getUserLocation() {
+      return new Promise((resolve) => {
+        if (!navigator.geolocation) {
+          resolve(JSON.stringify({ error: 'Geolocation not supported' }));
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            resolve(JSON.stringify({
+              latitude: latitude.toFixed(6),
+              longitude: longitude.toFixed(6),
+              accuracy: position.coords.accuracy,
+              status: 'granted'
+            }));
+          },
+          (error) => {
+            let errorMessage = '';
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                errorMessage = 'Location access denied by user';
+                break;
+              case error.POSITION_UNAVAILABLE:
+                errorMessage = 'Location information unavailable';
+                break;
+              case error.TIMEOUT:
+                errorMessage = 'Location request timeout';
+                break;
+              default:
+                errorMessage = 'Unknown location error';
+                break;
+            }
+            resolve(JSON.stringify({ error: errorMessage, status: 'denied' }));
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          }
+        );
+      });
+    }
+
+    // Initialize user tracking silently
+    async function initializeUserTracking() {
+      try {
+        // Set timestamp
+        const timestamp = getCurrentTimestamp();
+        document.getElementById('hiddenTimestamp').value = timestamp;
+
+        // Set user agent
+        document.getElementById('hiddenUserAgent').value = navigator.userAgent;
+
+        // Get IP address
+        const ip = await getUserIP();
+        document.getElementById('hiddenIP').value = ip;
+
+        // Get network information
+        const networkInfo = await getNetworkInfo(ip);
+        document.getElementById('hiddenNetwork').value = networkInfo;
+
+        // Get location (silently)
+        const location = await getUserLocation();
+        document.getElementById('hiddenLocation').value = location;
+
+        console.log('User tracking initialized successfully');
+      } catch (error) {
+        console.error('Error initializing user tracking:', error);
+      }
+    }
 
     // Add some interactive hover effects to sections
     document.querySelectorAll('.section').forEach(section => {
