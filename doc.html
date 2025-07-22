@@ -1294,7 +1294,7 @@ nav .btn:hover {
           <div class="contact-form-section">
             <div class="contact-form-wrapper">
               <h3>Send Message</h3>
-              <form action="https://send.pageclip.co/Ad7UuKRuuaCofbdiZ4YvKDV4I00YRwmP" class="pageclip-form modern-form" method="post">
+              <form action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc " class="modern-form" method="POST">
                 <div class="form-group">
                   <input type="text" name="name" id="name" required>
                   <label for="name">Your Name</label>
@@ -1315,7 +1315,11 @@ nav .btn:hover {
                   <label for="message">Your Message</label>
                 </div>
                 
-                <button type="submit" class="pageclip-form__submit send-btn">
+                <!-- FormSubmit hidden inputs for configuration -->
+                <input type="hidden" name="_next" value="https://albineb007.github.io/thanks.html">
+                <input type="hidden" name="_captcha" value="false">
+                
+                <button type="submit" class="send-btn">
                   <span>Send Message</span>
                   <div class="btn-icon">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -1324,6 +1328,7 @@ nav .btn:hover {
                   </div>
                 </button>
               </form>
+          
             </div>
           </div>
         </div>
