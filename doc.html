@@ -1077,6 +1077,76 @@ nav .btn:hover {
       transform: scale(1.05);
     }
 
+    /* Professional Skills Section */
+    .skills-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .skill-category {
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .skill-category:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border-color: var(--black);
+    }
+
+    .skill-category h3 {
+      color: var(--black);
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .skill-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .skill-tag {
+      background: var(--black);
+      color: var(--white);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .skill-tag:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    /* Dark theme skills */
+    body.colorful-theme .skill-category {
+      background: rgba(248, 250, 252, 0.05) !important;
+      border: 1px solid var(--border-dark) !important;
+    }
+
+    body.colorful-theme .skill-category h3 {
+      color: var(--text-light) !important;
+    }
+
+    body.colorful-theme .skill-tag {
+      background: var(--primary-color) !important;
+      color: white !important;
+    }
+
+    body.colorful-theme .skill-tag:hover {
+      background: var(--accent-color) !important;
+    }
+
   </style>
 </head>
 
@@ -1113,7 +1183,54 @@ nav .btn:hover {
       <h2>About Me</h2>
       <p>I am a passionate full stack developer with experience in internships, problem-solving, and building dynamic web applications. I work with HTML, CSS, JavaScript, React, Django, WordPress, PostgreSQL, and SEO optimization to deliver high-quality digital experiences.</p>
     </section>
-
+<section id="skills" class="section white-section fade-in">
+      <h2>Professional Skills</h2>
+      <div class="skills-container">
+        <div class="skill-category">
+          <h3>Frontend Development</h3>
+          <div class="skill-items">
+            <span class="skill-tag">HTML5</span>
+            <span class="skill-tag">CSS3</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">Bootstrap</span>
+          </div>
+        </div>
+        
+        <div class="skill-category">
+          <h3>Backend Development</h3>
+          <div class="skill-items">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Django</span>
+            <span class="skill-tag">REST API</span>
+            <span class="skill-tag">PostgreSQL</span>
+            <span class="skill-tag">MySQL</span>
+          </div>
+        </div>
+        
+        <div class="skill-category">
+          <h3>Data & Analytics</h3>
+          <div class="skill-items">
+            <span class="skill-tag">Power BI</span>
+            <span class="skill-tag">Excel</span>
+            <span class="skill-tag">VBA</span>
+            <span class="skill-tag">Data Analysis</span>
+            <span class="skill-tag">Machine Learning</span>
+          </div>
+        </div>
+        
+        <div class="skill-category">
+          <h3>Tools & Technologies</h3>
+          <div class="skill-items">
+            <span class="skill-tag">WordPress</span>
+            <span class="skill-tag">SEO</span>
+            <span class="skill-tag">Git</span>
+            <span class="skill-tag">VS Code</span>
+            <span class="skill-tag">Google Apps Script</span>
+          </div>
+        </div>
+      </div>
+    </section>
     <section id="projects" class="section white-section projects fade-in">
       <h2>Projects</h2>
       <div class="search-bar">
