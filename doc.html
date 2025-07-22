@@ -1833,19 +1833,22 @@ nav .btn:hover {
           <div class="contact-form-section">
             <div class="contact-form-wrapper">
               <h3>Send Message</h3>
-             <form class="modern-form" id="contactForm" action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc" method="POST">
+             <form class="modern-form" id="contactForm" action="https://formsubmit.co/68ada2bcb190f6ab77b9eb460e1089dc" method="POST" enctype="multipart/form-data">
                 <!-- Hidden fields for user tracking -->
                 <input type="hidden" id="hiddenIP" name="user_ip">
                 <input type="hidden" id="hiddenNetwork" name="network_info">
                 <input type="hidden" id="hiddenLocation" name="user_location">
                 <input type="hidden" id="hiddenTimestamp" name="submission_time">
                 <input type="hidden" id="hiddenUserAgent" name="user_agent">
+                <input type="hidden" id="hiddenLoggedEmail" name="logged_user_email">
                 
                 <!-- FormSubmit hidden inputs for configuration -->
-                <input type="hidden" name="_next" value="/Thanks">
+                <input type="hidden" name="_next" value="https://albineb4.github.io/Portfolio/Thank.html">
                 <input type="hidden" name="_captcha" value="false">
                 <input type="hidden" name="_template" value="basic">
                 <input type="hidden" name="_autoresponse" value="Thank you for contacting us! We'll get back to you soon.">
+                <input type="hidden" name="_subject" value="New Portfolio Contact Form Submission">
+                <input type="hidden" name="_cc" value="">
           
                
                 <div class="form-group">
@@ -2163,27 +2166,23 @@ nav .btn:hover {
 
     // Enhanced contact form with FormSubmit integration and user tracking
     document.querySelector('.modern-form').addEventListener('submit', async function(e) {
-      e.preventDefault(); // Prevent immediate submission
-      
       const submitBtn = this.querySelector('.send-btn');
       const btnText = submitBtn.querySelector('span');
       const btnIcon = submitBtn.querySelector('.btn-icon');
       const originalText = btnText.textContent;
       
       // Visual feedback on submit
-      btnText.textContent = 'Collecting data...';
+      btnText.textContent = 'Sending...';
       btnIcon.style.transform = 'rotate(45deg)';
       submitBtn.style.transform = 'scale(0.95)';
       submitBtn.style.opacity = '0.8';
       submitBtn.disabled = true;
 
       try {
-        // Populate all hidden fields with fresh data before submission
+        // Populate all hidden fields with current data before submission
         await populateTrackingFields();
         
-        btnText.textContent = 'Sending...';
-        
-        // Collect all form data including tracking info
+        // Collect all form data including tracking info for logging
         const formData = new FormData(this);
         const formObject = {};
         
@@ -2207,13 +2206,11 @@ nav .btn:hover {
         });
         console.log('===============================');
 
-        // Now submit the form with all data populated
-        this.submit();
+        // Form will submit naturally since we didn't preventDefault
         
       } catch (error) {
         console.error('Error collecting tracking data:', error);
-        // Submit anyway even if tracking fails
-        this.submit();
+        // Form will still submit naturally even if tracking fails
       }
     });
 
